@@ -1,7 +1,7 @@
 // This file is only for JSR related, non-JSR related must set in the file `deno.jsonc`!
 {
 	"name": "@hugoalh/http-header-link",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"exports": {
 		".": "./mod.ts"
 	},

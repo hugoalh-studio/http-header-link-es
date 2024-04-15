@@ -1,6 +1,6 @@
 {
 	"name": "@hugoalh/http-header-link",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "A module to handle HTTP header Link according to RFC 8288 standard.",
 	"keywords": [
 		"header",

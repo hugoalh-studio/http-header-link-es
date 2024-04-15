@@ -144,10 +144,23 @@ An ES (JavaScript & TypeScript) module to handle [HTTP header `Link`](https://de
 ## 🧩 API
 
 - ```ts
-  function isPrimitive(item: unknown): item is Primitive;
+  class HTTPHeaderLink {
+    constructor(value?: string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response): HTTPHeaderLink;
+    add(value: string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response): this;
+    entries(): HTTPHeaderLinkEntry[];
+    getByParameter(key: string, value: string): HTTPHeaderLinkEntry[];
+    getByRel(value: string): HTTPHeaderLinkEntry[];
+    hasParameter(key: string, value: string): boolean;
+    toString(): string;
+    static parse(value: string | Headers | HTTPHeaderLink | Response): HTTPHeaderLink;
+    static stringify(value: HTTPHeaderLinkEntry[]): string;
+  }
   ```
 - ```ts
-  type Primitive = bigint | boolean | number | string | symbol | null | undefined;
+  type HTTPHeaderLinkEntry = [
+    uri: string,
+    parameters: { [key: string]: string; }
+  ];
   ```
 
 > **ℹ️ Note**
@@ -160,18 +173,18 @@ An ES (JavaScript & TypeScript) module to handle [HTTP header `Link`](https://de
 ## ✍️ Example
 
 - ```ts
-  isPrimitive({});
-  //=> false
+  new HTTPHeaderLink(`<https://example.com>; rel="preconnect"`);
+  /*=>
+  HTTPHeaderLink [
+    ["https://example.com", { rel: "preconnect" }]
+  ]
+  */
   ```
 - ```ts
-  isPrimitive(new Headers());
-  //=> false
-  ```
-- ```ts
-  isPrimitive(true);
-  //=> true
-  ```
-- ```ts
-  isPrimitive(123n);
-  //=> true
+  new HTTPHeaderLink(`<https://example.com/%E8%8B%97%E6%9D%A1>; rel="preconnect"`);
+  /*=>
+  HTTPHeaderLink [
+    ["https://example.com/苗条", { rel: "preconnect" }]
+  ]
+  */
   ```
