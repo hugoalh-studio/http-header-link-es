@@ -14,7 +14,7 @@ function validateURI(uri: string): void {
 		!isStringSingleLine(uri) ||
 		/[\s\t]/.test(uri)
 	) {
-		throw new SyntaxError(`${uri} is not a valid URI!`);
+		throw new SyntaxError(`\`${uri}\` is not a valid URI!`);
 	}
 }
 /**
@@ -36,156 +36,158 @@ export type HTTPHeaderLinkEntry = [
 	parameters: { [key: string]: string; }
 ];
 /**
- * Handle HTTP header `Link` according to RFC 8288 standard.
+ * Handle the HTTP header `Link` according to the specification RFC 8288.
  */
 export class HTTPHeaderLink {
+	get [Symbol.toStringTag](): string {
+		return "HTTPHeaderLink";
+	}
 	#entries: HTTPHeaderLinkEntry[] = [];
 	/**
-	 * @param {string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response} [value]
+	 * @param {string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response} [input] Input.
 	 */
-	constructor(value?: string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response) {
-		if (typeof value !== "undefined") {
-			this.add(value);
+	constructor(input?: string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response) {
+		if (typeof input !== "undefined") {
+			this.add(input);
 		}
 	}
 	/**
-	 * Parse HTTP header `Link` from string.
+	 * Parse from string.
 	 * @access private
-	 * @param {string} value
+	 * @param {string} input Input.
 	 * @returns {void}
 	 */
-	#parse(value: string): void {
-		if (value.length === 0) {
+	#parseFromString(input: string): void {
+		if (input.length === 0) {
 			return;
 		}
-		const valueResolve: string = value.replace(/[\uFEFF\u00A0]/gu, "");// Remove Unicode characters of BOM (Byte Order Mark) and no-break space.
-		for (let cursor = 0; cursor < valueResolve.length; cursor += 1) {
-			cursor += cursorWhitespaceSkipper(valueResolve, cursor);
-			if (valueResolve.charAt(cursor) !== "<") {
-				throw new SyntaxError(`Unexpected character "${valueResolve.charAt(cursor)}" at position ${cursor}; Expect character "<"!`);
+		const inputResolve: string = input.replace(/[\uFEFF\u00A0]/gu, "");// Remove Unicode characters of BOM (Byte Order Mark) and no-break space.
+		for (let cursor = 0; cursor < inputResolve.length; cursor += 1) {
+			cursor += cursorWhitespaceSkipper(inputResolve, cursor);
+			if (inputResolve.charAt(cursor) !== "<") {
+				throw new SyntaxError(`Unexpected character "${inputResolve.charAt(cursor)}" at position ${cursor}; Expect character "<"!`);
 			}
 			cursor += 1;
-			const cursorEndURI: number = valueResolve.indexOf(">", cursor);
+			const cursorEndURI: number = inputResolve.indexOf(">", cursor);
 			if (cursorEndURI === -1) {
 				throw new SyntaxError(`Missing end of URI delimiter character ">" after position ${cursor}!`);
 			}
 			if (cursorEndURI === cursor) {
 				throw new SyntaxError(`Missing URI at position ${cursor}!`);
 			}
-			const uriSlice: string = valueResolve.slice(cursor, cursorEndURI);
+			const uriSlice: string = inputResolve.slice(cursor, cursorEndURI);
 			validateURI(uriSlice);
 			const uri: HTTPHeaderLinkEntry[0] = decodeURI(uriSlice);
 			const parameters: HTTPHeaderLinkEntry[1] = {};
 			cursor = cursorEndURI + 1;
-			cursor += cursorWhitespaceSkipper(valueResolve, cursor);
+			cursor += cursorWhitespaceSkipper(inputResolve, cursor);
 			if (
-				cursor === valueResolve.length ||
-				valueResolve.charAt(cursor) === ","
+				cursor === inputResolve.length ||
+				inputResolve.charAt(cursor) === ","
 			) {
 				this.#entries.push([uri, parameters]);
 				continue;
 			}
-			if (valueResolve.charAt(cursor) !== ";") {
-				throw new SyntaxError(`Unexpected character "${valueResolve.charAt(cursor)}" at position ${cursor}; Expect character ";"!`);
+			if (inputResolve.charAt(cursor) !== ";") {
+				throw new SyntaxError(`Unexpected character "${inputResolve.charAt(cursor)}" at position ${cursor}; Expect character ";"!`);
 			}
 			cursor += 1;
-			while (cursor < valueResolve.length) {
-				cursor += cursorWhitespaceSkipper(valueResolve, cursor);
-				const parameterKey: string | undefined = valueResolve.slice(cursor).match(/^[\w-]+\*?/)?.[0].toLowerCase();
+			while (cursor < inputResolve.length) {
+				cursor += cursorWhitespaceSkipper(inputResolve, cursor);
+				const parameterKey: string | undefined = inputResolve.slice(cursor).match(/^[\w-]+\*?/)?.[0].toLowerCase();
 				if (typeof parameterKey === "undefined") {
-					throw new SyntaxError(`Unexpected character "${valueResolve.charAt(cursor)}" at position ${cursor}; Expect a valid parameter key!`);
+					throw new SyntaxError(`Unexpected character "${inputResolve.charAt(cursor)}" at position ${cursor}; Expect a valid parameter key!`);
 				}
 				cursor += parameterKey.length;
-				cursor += cursorWhitespaceSkipper(valueResolve, cursor);
+				cursor += cursorWhitespaceSkipper(inputResolve, cursor);
 				if (
-					cursor === valueResolve.length ||
-					valueResolve.charAt(cursor) === ","
+					cursor === inputResolve.length ||
+					inputResolve.charAt(cursor) === ","
 				) {
 					parameters[parameterKey] = "";
 					break;
 				}
-				if (valueResolve.charAt(cursor) === ";") {
+				if (inputResolve.charAt(cursor) === ";") {
 					parameters[parameterKey] = "";
 					cursor += 1;
 					continue;
 				}
-				if (valueResolve.charAt(cursor) !== "=") {
-					throw new SyntaxError(`Unexpected character "${valueResolve.charAt(cursor)}" at position ${cursor}; Expect character "="!`);
+				if (inputResolve.charAt(cursor) !== "=") {
+					throw new SyntaxError(`Unexpected character "${inputResolve.charAt(cursor)}" at position ${cursor}; Expect character "="!`);
 				}
 				cursor += 1;
-				cursor += cursorWhitespaceSkipper(valueResolve, cursor);
+				cursor += cursorWhitespaceSkipper(inputResolve, cursor);
 				let parameterValue = "";
-				if (valueResolve.charAt(cursor) === "\"") {
+				if (inputResolve.charAt(cursor) === "\"") {
 					cursor += 1;
-					while (cursor < valueResolve.length) {
-						if (valueResolve.charAt(cursor) === "\"") {
+					while (cursor < inputResolve.length) {
+						if (inputResolve.charAt(cursor) === "\"") {
 							cursor += 1;
 							break;
 						}
-						if (valueResolve.charAt(cursor) === "\\") {
+						if (inputResolve.charAt(cursor) === "\\") {
 							cursor += 1;
 						}
-						parameterValue += valueResolve.charAt(cursor);
+						parameterValue += inputResolve.charAt(cursor);
 						cursor += 1;
 					}
 				} else {
-					const cursorDiffParameterValue: number = valueResolve.slice(cursor).search(/[\s;,]/);
+					const cursorDiffParameterValue: number = inputResolve.slice(cursor).search(/[\s;,]/);
 					if (cursorDiffParameterValue === -1) {
-						parameterValue += valueResolve.slice(cursor);
+						parameterValue += inputResolve.slice(cursor);
 						cursor += parameterValue.length;
 					} else {
-						parameterValue += valueResolve.slice(cursor, cursorDiffParameterValue);
+						parameterValue += inputResolve.slice(cursor, cursorDiffParameterValue);
 						cursor += cursorDiffParameterValue;
 					}
 				}
 				parameters[parameterKey] = parametersNeedLowerCase.has(parameterKey) ? parameterValue.toLowerCase() : parameterValue;
-				cursor += cursorWhitespaceSkipper(valueResolve, cursor);
+				cursor += cursorWhitespaceSkipper(inputResolve, cursor);
 				if (
-					cursor === valueResolve.length ||
-					valueResolve.charAt(cursor) === ","
+					cursor === inputResolve.length ||
+					inputResolve.charAt(cursor) === ","
 				) {
 					break;
 				}
-				if (valueResolve.charAt(cursor) === ";") {
+				if (inputResolve.charAt(cursor) === ";") {
 					cursor += 1;
 					continue;
 				}
-				throw new SyntaxError(`Unexpected character "${valueResolve.charAt(cursor)}" at position ${cursor}; Expect character ",", character ";", or end of the string!`);
+				throw new SyntaxError(`Unexpected character "${inputResolve.charAt(cursor)}" at position ${cursor}; Expect character ",", character ";", or end of the string!`);
 			}
 			this.#entries.push([uri, parameters]);
 		}
 	}
 	/**
 	 * Add entries.
-	 * @param {string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response} value Entries.
+	 * @param {string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response} input Input.
 	 * @returns {this}
 	 */
-	add(value: string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response): this {
-		if (value instanceof Headers) {
-			this.#parse(value.get("Link") ?? "");
-		} else if (value instanceof HTTPHeaderLink) {
-			this.#entries.push(...value.#entries);
-		} else if (Array.isArray(value)) {
-			for (const entry of value) {
-				const [uri, parameters] = entry;
+	add(input: string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response): this {
+		if (input instanceof HTTPHeaderLink) {
+			this.#entries.push(...input.#entries);
+		} else if (input instanceof Response) {
+			this.#parseFromString(input.headers.get("Link") ?? "");
+		} else if (input instanceof Headers) {
+			this.#parseFromString(input.get("Link") ?? "");
+		} else if (Array.isArray(input)) {
+			this.#entries.push(...input.map(([uri, parameters]: HTTPHeaderLinkEntry): HTTPHeaderLinkEntry => {
 				validateURI(uri);
-				Object.entries(parameters).forEach(([parameterKey, parameterValue]: [string, string]) => {
+				Object.entries(parameters).forEach(([key, value]: [string, string]): void => {
 					if (
-						parameterKey !== parameterKey.toLowerCase() ||
-						!(/^[\w-]+\*?$/.test(parameterKey))
+						key !== key.toLowerCase() ||
+						!(/^[\w-]+\*?$/.test(key))
 					) {
-						throw new SyntaxError(`\`${parameterKey}\` is not a valid parameter key!`);
+						throw new SyntaxError(`\`${key}\` is not a valid parameter key!`);
 					}
-					if (parametersNeedLowerCase.has(parameterKey) && parameterValue !== parameterValue.toLowerCase()) {
-						throw new SyntaxError(`\`${parameterValue}\` is not a valid parameter value!`);
+					if (parametersNeedLowerCase.has(key) && value !== value.toLowerCase()) {
+						throw new SyntaxError(`\`${value}\` is not a valid parameter value!`);
 					}
 				});
-				this.#entries.push([uri, { ...parameters }]);
-			}
-		} else if (value instanceof Response) {
-			this.#parse(value.headers.get("Link") ?? "");
+				return [uri, { ...parameters }];
+			}));
 		} else {
-			this.#parse(value);
+			this.#parseFromString(input);
 		}
 		return this;
 	}
@@ -240,30 +242,30 @@ export class HTTPHeaderLink {
 	 * @returns {string} Stringified entries.
 	 */
 	toString(): string {
-		return this.#entries.map((entry: HTTPHeaderLinkEntry): string => {
-			const [uri, parameters] = entry;
-			let result = `<${encodeURI(uri)}>`;
-			for (const [key, value] of Object.entries(parameters)) {
-				result += (value.length > 0) ? `; ${key}="${value.replaceAll("\"", "\\\"")}"` : `; ${key}`;
-			}
-			return result;
+		return this.#entries.map(([uri, parameters]: HTTPHeaderLinkEntry): string => {
+			return [
+				`<${encodeURI(uri)}>`,
+				...Object.entries(parameters).map(([key, value]: [string, string]): string => {
+					return ((value.length > 0) ? `${key}="${value.replaceAll("\"", "\\\"")}"` : key);
+				})
+			].join("; ");
 		}).join(", ");
 	}
 	/**
-	 * Parse HTTP header `Link` according to RFC 8288 standard.
-	 * @param {string | Headers | HTTPHeaderLink | Response} value
+	 * Parse the HTTP header `Link` according to the specification RFC 8288.
+	 * @param {string | Headers | HTTPHeaderLink | Response} input Input.
 	 * @returns {HTTPHeaderLink}
 	 */
-	static parse(value: string | Headers | HTTPHeaderLink | Response): HTTPHeaderLink {
-		return new this(value);
+	static parse(input: string | Headers | HTTPHeaderLink | Response): HTTPHeaderLink {
+		return new this(input);
 	}
 	/**
-	 * Stringify as HTTP header `Link` according to RFC 8288 standard.
-	 * @param {HTTPHeaderLinkEntry[]} value
+	 * Stringify as the HTTP header `Link` according to the specification RFC 8288.
+	 * @param {HTTPHeaderLinkEntry[]} input Input.
 	 * @returns {string}
 	 */
-	static stringify(value: HTTPHeaderLinkEntry[]): string {
-		return new this(value).toString();
+	static stringify(input: HTTPHeaderLinkEntry[]): string {
+		return new this(input).toString();
 	}
 }
 export default HTTPHeaderLink;

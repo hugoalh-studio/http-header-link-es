@@ -6,13 +6,13 @@
 [![JSR: @hugoalh/http-header-link](https://img.shields.io/jsr/v/@hugoalh/http-header-link?label=JSR%20@hugoalh/http-header-link&labelColor=F7DF1E&logoColor=000000&style=flat "JSR: @hugoalh/http-header-link")](https://jsr.io/@hugoalh/http-header-link)
 [![NPM: @hugoalh/http-header-link](https://img.shields.io/npm/v/@hugoalh/http-header-link?label=@hugoalh/http-header-link&labelColor=CB3837&logo=npm&logoColor=ffffff&style=flat "NPM: @hugoalh/http-header-link")](https://www.npmjs.com/package/@hugoalh/http-header-link)
 
-An ES (JavaScript & TypeScript) module to handle [HTTP header `Link`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link) according to [RFC 8288](https://httpwg.org/specs/rfc8288.html#header) standard.
+An ES (JavaScript & TypeScript) module to handle the [HTTP header `Link`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link) according to the specification [RFC 8288](https://httpwg.org/specs/rfc8288.html#header).
 
 ## 🎯 Target
 
-- Bun ^ v1.0.0
+- Bun >= v1.1.0
 - Cloudflare Workers
-- Deno >= v1.34.0 / >= v1.41.1 (For JSR Only)
+- Deno >= v1.42.0
   > **🛡️ Require Permission**
   >
   > *N/A*
@@ -145,15 +145,15 @@ An ES (JavaScript & TypeScript) module to handle [HTTP header `Link`](https://de
 
 - ```ts
   class HTTPHeaderLink {
-    constructor(value?: string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response): HTTPHeaderLink;
-    add(value: string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response): this;
+    constructor(input?: string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response): this;
+    add(input: string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response): this;
     entries(): HTTPHeaderLinkEntry[];
     getByParameter(key: string, value: string): HTTPHeaderLinkEntry[];
     getByRel(value: string): HTTPHeaderLinkEntry[];
     hasParameter(key: string, value: string): boolean;
     toString(): string;
-    static parse(value: string | Headers | HTTPHeaderLink | Response): HTTPHeaderLink;
-    static stringify(value: HTTPHeaderLinkEntry[]): string;
+    static parse(input: string | Headers | HTTPHeaderLink | Response): HTTPHeaderLink;
+    static stringify(input: HTTPHeaderLinkEntry[]): string;
   }
   ```
 - ```ts
