@@ -13,12 +13,10 @@
 >   LTS("Long Term Support")
 >   Maintenance("Maintenance")
 >   EOL("End Of Life")
->   Unstable --> Pre
->   Pre --> Release
->   subgraph Support
+>   Unstable --> Pre --> Release
+>   subgraph Supported
 >     Release -- Major = 0 --> Maintenance
->     Release -- Major > 0 --> LTS
->     LTS --> Maintenance
+>     Release -- Major > 0 --> LTS --> Maintenance
 >   end
 >   Maintenance --> EOL
 > ```
