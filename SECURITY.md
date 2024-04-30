@@ -27,10 +27,10 @@
 
 > **ℹ️ Note**
 >
-> - The date format is according to ISO 8601 standard.
+> - The date format is according to the specification ISO 8601.
 > - Values in italic format are subject to change.
 > - Versions which not in the list are also end of life.
 
-## Report A Vulnerability
+## Report Vulnerabilities
 
-You can report a security vulnerability by [create a security vulnerability report](https://github.com/hugoalh/hugoalh/blob/main/universal-guide/contributing.md#create-a-security-vulnerability-report).
+You can report security vulnerabilities by [create security vulnerability report](https://github.com/hugoalh/hugoalh/blob/main/universal-guide/contributing.md#create-a-security-vulnerability-report).
