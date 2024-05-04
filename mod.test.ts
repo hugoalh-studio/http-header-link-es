@@ -1,5 +1,5 @@
-import { assertEquals } from "STD/assert/assert_equals.ts";
-import { assertThrows } from "STD/assert/assert_throws.ts";
+import { assertEquals } from "STD/assert/assert-equals";
+import { assertThrows } from "STD/assert/assert-throws";
 import { HTTPHeaderLink } from "./mod.ts";
 Deno.test("String Good 1", { permissions: "none" }, () => {
 	const instance = new HTTPHeaderLink(`<https://example.com>; rel="preconnect"`);
