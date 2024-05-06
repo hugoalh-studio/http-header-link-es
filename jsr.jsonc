@@ -1,12 +1,12 @@
 {
 	"$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
 	"name": "@hugoalh/http-header-link",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"exports": {
 		".": "./mod.ts"
 	},
 	"imports": {
-		"https://raw.githubusercontent.com/hugoalh-studio/is-string-singleline-es/v1.0.1/mod.ts": "jsr:@hugoalh/is-string-singleline@1.0.1"
+		"https://raw.githubusercontent.com/hugoalh-studio/is-string-singleline-es/v1.0.2/mod.ts": "jsr:@hugoalh/is-string-singleline@1.0.2"
 	},
 	"publish": {
 		"exclude": [

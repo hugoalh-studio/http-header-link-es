@@ -8,7 +8,7 @@ const pathsMain: WalkEntry[] = await Array.fromAsync(readDir("."));
 const transformResult: TransformOutput = await transform({
 	entryPoints: ["mod.ts"],
 	mappings: {
-		"https://raw.githubusercontent.com/hugoalh-studio/is-string-singleline-es/v1.0.1/mod.ts": { name: "@hugoalh/is-string-singleline" }
+		"https://raw.githubusercontent.com/hugoalh-studio/is-string-singleline-es/v1.0.2/mod.ts": { name: "@hugoalh/is-string-singleline" }
 	},
 	shims: [],
 	target: "Latest"
