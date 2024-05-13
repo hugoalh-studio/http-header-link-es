@@ -65,12 +65,12 @@ export class HTTPHeaderLink {
 		for (let cursor = 0; cursor < inputResolve.length; cursor += 1) {
 			cursor += cursorWhitespaceSkipper(inputResolve, cursor);
 			if (inputResolve.charAt(cursor) !== "<") {
-				throw new SyntaxError(`Unexpected character "${inputResolve.charAt(cursor)}" at position ${cursor}; Expect character "<"!`);
+				throw new SyntaxError(`Unexpected character \`${inputResolve.charAt(cursor)}\` at position ${cursor}; Expect character \`<\`!`);
 			}
 			cursor += 1;
 			const cursorEndURI: number = inputResolve.indexOf(">", cursor);
 			if (cursorEndURI === -1) {
-				throw new SyntaxError(`Missing end of URI delimiter character ">" after position ${cursor}!`);
+				throw new SyntaxError(`Missing end of URI delimiter character \`>\` after position ${cursor}!`);
 			}
 			if (cursorEndURI === cursor) {
 				throw new SyntaxError(`Missing URI at position ${cursor}!`);
@@ -89,14 +89,14 @@ export class HTTPHeaderLink {
 				continue;
 			}
 			if (inputResolve.charAt(cursor) !== ";") {
-				throw new SyntaxError(`Unexpected character "${inputResolve.charAt(cursor)}" at position ${cursor}; Expect character ";"!`);
+				throw new SyntaxError(`Unexpected character \`${inputResolve.charAt(cursor)}\` at position ${cursor}; Expect character \`;\`!`);
 			}
 			cursor += 1;
 			while (cursor < inputResolve.length) {
 				cursor += cursorWhitespaceSkipper(inputResolve, cursor);
 				const parameterKey: string | undefined = inputResolve.slice(cursor).match(/^[\w-]+\*?/)?.[0].toLowerCase();
 				if (typeof parameterKey === "undefined") {
-					throw new SyntaxError(`Unexpected character "${inputResolve.charAt(cursor)}" at position ${cursor}; Expect a valid parameter key!`);
+					throw new SyntaxError(`Unexpected character \`${inputResolve.charAt(cursor)}\` at position ${cursor}; Expect a valid parameter key!`);
 				}
 				cursor += parameterKey.length;
 				cursor += cursorWhitespaceSkipper(inputResolve, cursor);
@@ -113,7 +113,7 @@ export class HTTPHeaderLink {
 					continue;
 				}
 				if (inputResolve.charAt(cursor) !== "=") {
-					throw new SyntaxError(`Unexpected character "${inputResolve.charAt(cursor)}" at position ${cursor}; Expect character "="!`);
+					throw new SyntaxError(`Unexpected character \`${inputResolve.charAt(cursor)}\` at position ${cursor}; Expect character \`=\`!`);
 				}
 				cursor += 1;
 				cursor += cursorWhitespaceSkipper(inputResolve, cursor);
@@ -153,7 +153,7 @@ export class HTTPHeaderLink {
 					cursor += 1;
 					continue;
 				}
-				throw new SyntaxError(`Unexpected character "${inputResolve.charAt(cursor)}" at position ${cursor}; Expect character ",", character ";", or end of the string!`);
+				throw new SyntaxError(`Unexpected character \`${inputResolve.charAt(cursor)}\` at position ${cursor}; Expect character \`,\`, character \`;\`, or end of the string!`);
 			}
 			this.#entries.push([uri, parameters]);
 		}
