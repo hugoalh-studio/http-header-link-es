@@ -6,7 +6,7 @@
 		".": "./mod.ts"
 	},
 	"imports": {
-		"https://raw.githubusercontent.com/hugoalh-studio/is-string-singleline-es/v1.0.2/mod.ts": "jsr:@hugoalh/is-string-singleline@1.0.2"
+		"https://raw.githubusercontent.com/hugoalh-studio/is-string-singleline-es/v1.0.2/mod.ts": "jsr:@hugoalh/is-string-singleline@^1.0.2"
 	},
 	"publish": {
 		"exclude": [
@@ -22,8 +22,8 @@
 			"**/bench.tsx",
 			"**/test.ts",
 			"**/test.tsx",
-			".dnt.ts",
-			"npm/**"
+			"npm/**",
+			".dnt.ts"
 		],
 		"include": [
 			"**/*.json",

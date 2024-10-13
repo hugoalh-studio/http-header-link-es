@@ -12,54 +12,45 @@ An ES (JavaScript & TypeScript) module to handle the [HTTP header `Link`](https:
 
 ### 🎯 Targets
 
-|  | **Registry - JSR** | **Registry - NPM** | **Remote Import** |
+|  | **Remote** | **JSR** | **NPM** |
 |:--|:--|:--|:--|
-| **[Bun](https://bun.sh/)** >= v1.1.0 | [✔️ `node_modules`](https://jsr.io/docs/npm-compatibility) | [✔️ Specifier `npm:`](https://bun.sh/docs/runtime/autoimport) | ❌ |
-| **[Cloudflare Workers](https://workers.cloudflare.com/)** | [✔️ `node_modules`](https://jsr.io/docs/with/cloudflare-workers) | [✔️ `node_modules`](https://docs.npmjs.com/using-npm-packages-in-your-projects) | ❌ |
-| **[Deno](https://deno.land/)** >= v1.42.0 | [✔️ Specifier `jsr:`](https://jsr.io/docs/with/deno) | [✔️ Specifier `npm:`](https://docs.deno.com/runtime/manual/node/npm_specifiers) | [✔️](https://docs.deno.com/runtime/manual/basics/modules/#remote-import) |
-| **[NodeJS](https://nodejs.org/)** >= v16.13.0 | [✔️ `node_modules`](https://jsr.io/docs/with/node) | [✔️ `node_modules`](https://docs.npmjs.com/using-npm-packages-in-your-projects) | ❌ |
+| **[Bun](https://bun.sh/)** >= v1.1.0 | ❌ | ❓ | ✔️ |
+| **[Cloudflare Workers](https://workers.cloudflare.com/)** | ❌ | ❓ | ✔️ |
+| **[Deno](https://deno.land/)** >= v1.42.0 | ✔️ | ✔️ | ✔️ |
+| **[NodeJS](https://nodejs.org/)** >= v16.13.0 | ❌ | ❓ | ✔️ |
 
-> **ℹ️ Note**
->
-> It is possible to use this module in other methods/ways which not listed in here, however it is not officially supported.
+> [!NOTE]
+> - It is possible to use this module in other methods/ways which not listed in here, however those methods/ways are not officially supported, and should beware maybe cause security issues.
 
-### #️⃣ Registries Identifier
+### #️⃣ Resources Identifier
 
+- **Remote - GitHub Raw:**
+  ```
+  https://raw.githubusercontent.com/hugoalh-studio/http-header-link-es/{Tag}/mod.ts
+  ```
 - **JSR:**
   ```
-  @hugoalh/http-header-link
+  [jsr:]@hugoalh/http-header-link[@{Tag}]
   ```
 - **NPM:**
   ```
-  @hugoalh/http-header-link
+  [npm:]@hugoalh/http-header-link[@{Tag}]
   ```
 
-> **ℹ️ Note**
+> [!NOTE]
+> - For usage of remote resources, it is recommended to import the entire module with the main path `mod.ts`, however it is also able to import part of the module with sub path if available, but do not import if:
 >
-> - Although it is recommended to import the entire module, it is also able to import part of the module with sub path if available, please visit [file `jsr.jsonc`](./jsr.jsonc) property `exports` for available sub paths.
-> - It is recommended to use this module with tag for immutability.
-
-### #️⃣ Remote Import Paths
-
-- **GitHub Raw:** (Require Tag)
-  ```
-  https://raw.githubusercontent.com/hugoalh-studio/http-header-link-es/${Tag}/mod.ts
-  ```
-
-> **ℹ️ Note**
->
-> - Although it is recommended to import the entire module with the main path `mod.ts`, it is also able to import part of the module with sub path if available, but do not import if:
->
->   - it's file path has an underscore prefix (e.g.: `_foo.ts`, `_util/bar.ts`), or
+>   - it's path has an underscore prefix (e.g.: `_foo.ts`, `_util/bar.ts`), or
 >   - it is a benchmark or test file (e.g.: `foo.bench.ts`, `foo.test.ts`), or
->   - it's symbol has an underscore prefix (e.g.: `export function _baz() {}`).
+>   - it's symbol has an underscore prefix (e.g.: `_bar`, `_foo`).
 >
 >   These elements are not considered part of the public API, thus no stability is guaranteed for them.
-> - Although there have 3rd party services which provide enhanced, equal, or similar methods/ways to remote import the module, beware these services maybe inject unrelated elements and thus affect the security.
+> - For usage of JSR or NPM resources, it is recommended to import the entire module with the main entrypoint, however it is also able to import part of the module with sub entrypoint if available, please visit the [file `jsr.jsonc`](./jsr.jsonc) property `exports` for available sub entrypoints.
+> - It is recommended to use this module with tag for immutability.
 
-### 🛡️ Permissions
+### 🛡️ Require Runtime Permissions
 
-*This module does not require any permission.*
+*This module does not require any runtime permission.*
 
 ## 🧩 APIs
 
@@ -83,12 +74,10 @@ An ES (JavaScript & TypeScript) module to handle the [HTTP header `Link`](https:
   ];
   ```
 
-> **ℹ️ Note**
->
-> For the prettier documentation, can visit via:
->
-> - [Deno CLI `deno doc`](https://deno.land/manual/tools/documentation_generator)
-> - [JSR](https://jsr.io/@hugoalh/http-header-link)
+> [!NOTE]
+> - For the prettier documentation, can visit via:
+>   - [Deno CLI `deno doc`](https://docs.deno.com/runtime/reference/cli/documentation_generator/)
+>   - [JSR](https://jsr.io/@hugoalh/http-header-link)
 
 ## ✍️ Examples
 
