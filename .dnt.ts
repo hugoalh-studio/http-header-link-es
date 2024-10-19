@@ -8,11 +8,11 @@ await invokeDenoNodeJSTransformer({
 		"LICENSE.md",
 		"README.md"
 	],
-	entrypoints: configJSR.exports,
+	entrypoints: configJSR.getExports(),
 	generateDeclarationMap: true,
 	metadata: {
-		name: "@hugoalh/http-header-link",
-		version: configJSR.version,
+		name: configJSR.getName(),
+		version: configJSR.getVersion(),
 		description: "A module to handle the HTTP header `Link` according to the specification RFC 8288.",
 		keywords: [
 			"header",
