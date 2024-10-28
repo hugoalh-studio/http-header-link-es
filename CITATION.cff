@@ -4,8 +4,8 @@ title: "HTTP Header Link (ES)"
 message: "If you use this software, please cite it using the metadata from this file."
 type: "software"
 authors:
-  - name: "hugoalh Studio"
-repository-code: "https://github.com/hugoalh-studio/http-header-link-es"
+  - name: "hugoalh"
+repository-code: "https://github.com/hugoalh/http-header-link-es"
 keywords:
   - "es"
   - "header"

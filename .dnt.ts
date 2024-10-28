@@ -19,15 +19,15 @@ await invokeDenoNodeJSTransformer({
 			"http",
 			"link"
 		],
-		homepage: "https://github.com/hugoalh-studio/http-header-link-es#readme",
+		homepage: "https://github.com/hugoalh/http-header-link-es#readme",
 		bugs: {
-			url: "https://github.com/hugoalh-studio/http-header-link-es/issues"
+			url: "https://github.com/hugoalh/http-header-link-es/issues"
 		},
 		license: "MIT",
 		author: "hugoalh",
 		repository: {
 			type: "git",
-			url: "git+https://github.com/hugoalh-studio/http-header-link-es.git"
+			url: "git+https://github.com/hugoalh/http-header-link-es.git"
 		},
 		scripts: {
 		},

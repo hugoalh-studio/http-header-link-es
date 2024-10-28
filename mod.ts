@@ -1,4 +1,4 @@
-import { isStringSingleLine } from "https://raw.githubusercontent.com/hugoalh-studio/is-string-singleline-es/v1.0.2/mod.ts";
+import { isStringSingleLine } from "https://raw.githubusercontent.com/hugoalh/is-string-singleline-es/v1.0.4/mod.ts";
 const parametersNeedLowerCase: Set<string> = new Set<string>([
 	"rel",
 	"type"

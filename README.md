@@ -2,7 +2,7 @@
 
 [**⚖️** MIT](./LICENSE.md)
 
-[![GitHub: hugoalh-studio/http-header-link-es](https://img.shields.io/github/v/release/hugoalh-studio/http-header-link-es?label=hugoalh-studio/http-header-link-es&labelColor=181717&logo=github&logoColor=ffffff&sort=semver&style=flat "GitHub: hugoalh-studio/http-header-link-es")](https://github.com/hugoalh-studio/http-header-link-es)
+[![GitHub: hugoalh/http-header-link-es](https://img.shields.io/github/v/release/hugoalh/http-header-link-es?label=hugoalh/http-header-link-es&labelColor=181717&logo=github&logoColor=ffffff&sort=semver&style=flat "GitHub: hugoalh/http-header-link-es")](https://github.com/hugoalh/http-header-link-es)
 [![JSR: @hugoalh/http-header-link](https://img.shields.io/jsr/v/@hugoalh/http-header-link?label=@hugoalh/http-header-link&labelColor=F7DF1E&logo=jsr&logoColor=000000&style=flat "JSR: @hugoalh/http-header-link")](https://jsr.io/@hugoalh/http-header-link)
 [![NPM: @hugoalh/http-header-link](https://img.shields.io/npm/v/@hugoalh/http-header-link?label=@hugoalh/http-header-link&labelColor=CB3837&logo=npm&logoColor=ffffff&style=flat "NPM: @hugoalh/http-header-link")](https://www.npmjs.com/package/@hugoalh/http-header-link)
 
@@ -26,7 +26,7 @@ An ES (JavaScript & TypeScript) module to handle the [HTTP header `Link`](https:
 
 - **Remote - GitHub Raw:**
   ```
-  https://raw.githubusercontent.com/hugoalh-studio/http-header-link-es/{Tag}/mod.ts
+  https://raw.githubusercontent.com/hugoalh/http-header-link-es/{Tag}/mod.ts
   ```
 - **JSR:**
   ```
