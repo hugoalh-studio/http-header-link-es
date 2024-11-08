@@ -1,11 +1,10 @@
 import { isStringSingleLine } from "https://raw.githubusercontent.com/hugoalh/is-string-singleline-es/v1.0.4/mod.ts";
-const parametersNeedLowerCase: Set<string> = new Set<string>([
+const parametersNeedLowerCase: string[] = [
 	"rel",
 	"type"
-]);
+];
 /**
  * Validate URI.
- * @access private
  * @param {string} uri
  * @returns {void}
  */
@@ -19,7 +18,6 @@ function validateURI(uri: string): void {
 }
 /**
  * Cursor whitespace skipper.
- * @access private
  * @param {string} value
  * @param {number} cursor
  * @returns {number} Number of moves.
@@ -44,6 +42,7 @@ export class HTTPHeaderLink {
 	}
 	#entries: HTTPHeaderLinkEntry[] = [];
 	/**
+	 * Handle the HTTP header `Link` according to the specification RFC 8288.
 	 * @param {string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response} [input] Input.
 	 */
 	constructor(input?: string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response) {
@@ -53,7 +52,6 @@ export class HTTPHeaderLink {
 	}
 	/**
 	 * Parse from string.
-	 * @access private
 	 * @param {string} input Input.
 	 * @returns {void}
 	 */
@@ -61,99 +59,100 @@ export class HTTPHeaderLink {
 		if (input.length === 0) {
 			return;
 		}
-		const inputResolve: string = input.replace(/[\uFEFF\u00A0]/gu, "");// Remove Unicode characters of BOM (Byte Order Mark) and no-break space.
-		for (let cursor = 0; cursor < inputResolve.length; cursor += 1) {
-			cursor += cursorWhitespaceSkipper(inputResolve, cursor);
-			if (inputResolve.charAt(cursor) !== "<") {
-				throw new SyntaxError(`Unexpected character \`${inputResolve.charAt(cursor)}\` at position ${cursor}; Expect character \`<\`!`);
+		// Remove Unicode characters of BOM (Byte Order Mark) and no-break space.
+		const inputFmt: string = input.replaceAll("\u00A0", "").replaceAll("\uFEFF", "");
+		for (let cursor = 0; cursor < inputFmt.length; cursor += 1) {
+			cursor += cursorWhitespaceSkipper(inputFmt, cursor);
+			if (inputFmt.charAt(cursor) !== "<") {
+				throw new SyntaxError(`Unexpected character \`${inputFmt.charAt(cursor)}\` at position ${cursor}; Expect character \`<\`!`);
 			}
 			cursor += 1;
-			const cursorEndURI: number = inputResolve.indexOf(">", cursor);
+			const cursorEndURI: number = inputFmt.indexOf(">", cursor);
 			if (cursorEndURI === -1) {
 				throw new SyntaxError(`Missing end of URI delimiter character \`>\` after position ${cursor}!`);
 			}
 			if (cursorEndURI === cursor) {
 				throw new SyntaxError(`Missing URI at position ${cursor}!`);
 			}
-			const uriSlice: string = inputResolve.slice(cursor, cursorEndURI);
+			const uriSlice: string = inputFmt.slice(cursor, cursorEndURI);
 			validateURI(uriSlice);
 			const uri: HTTPHeaderLinkEntry[0] = decodeURI(uriSlice);
 			const parameters: HTTPHeaderLinkEntry[1] = {};
 			cursor = cursorEndURI + 1;
-			cursor += cursorWhitespaceSkipper(inputResolve, cursor);
+			cursor += cursorWhitespaceSkipper(inputFmt, cursor);
 			if (
-				cursor === inputResolve.length ||
-				inputResolve.charAt(cursor) === ","
+				cursor === inputFmt.length ||
+				inputFmt.charAt(cursor) === ","
 			) {
 				this.#entries.push([uri, parameters]);
 				continue;
 			}
-			if (inputResolve.charAt(cursor) !== ";") {
-				throw new SyntaxError(`Unexpected character \`${inputResolve.charAt(cursor)}\` at position ${cursor}; Expect character \`;\`!`);
+			if (inputFmt.charAt(cursor) !== ";") {
+				throw new SyntaxError(`Unexpected character \`${inputFmt.charAt(cursor)}\` at position ${cursor}; Expect character \`;\`!`);
 			}
 			cursor += 1;
-			while (cursor < inputResolve.length) {
-				cursor += cursorWhitespaceSkipper(inputResolve, cursor);
-				const parameterKey: string | undefined = inputResolve.slice(cursor).match(/^[\w-]+\*?/)?.[0].toLowerCase();
+			while (cursor < inputFmt.length) {
+				cursor += cursorWhitespaceSkipper(inputFmt, cursor);
+				const parameterKey: string | undefined = inputFmt.slice(cursor).match(/^[\w-]+\*?/)?.[0].toLowerCase();
 				if (typeof parameterKey === "undefined") {
-					throw new SyntaxError(`Unexpected character \`${inputResolve.charAt(cursor)}\` at position ${cursor}; Expect a valid parameter key!`);
+					throw new SyntaxError(`Unexpected character \`${inputFmt.charAt(cursor)}\` at position ${cursor}; Expect a valid parameter key!`);
 				}
 				cursor += parameterKey.length;
-				cursor += cursorWhitespaceSkipper(inputResolve, cursor);
+				cursor += cursorWhitespaceSkipper(inputFmt, cursor);
 				if (
-					cursor === inputResolve.length ||
-					inputResolve.charAt(cursor) === ","
+					cursor === inputFmt.length ||
+					inputFmt.charAt(cursor) === ","
 				) {
 					parameters[parameterKey] = "";
 					break;
 				}
-				if (inputResolve.charAt(cursor) === ";") {
+				if (inputFmt.charAt(cursor) === ";") {
 					parameters[parameterKey] = "";
 					cursor += 1;
 					continue;
 				}
-				if (inputResolve.charAt(cursor) !== "=") {
-					throw new SyntaxError(`Unexpected character \`${inputResolve.charAt(cursor)}\` at position ${cursor}; Expect character \`=\`!`);
+				if (inputFmt.charAt(cursor) !== "=") {
+					throw new SyntaxError(`Unexpected character \`${inputFmt.charAt(cursor)}\` at position ${cursor}; Expect character \`=\`!`);
 				}
 				cursor += 1;
-				cursor += cursorWhitespaceSkipper(inputResolve, cursor);
+				cursor += cursorWhitespaceSkipper(inputFmt, cursor);
 				let parameterValue = "";
-				if (inputResolve.charAt(cursor) === "\"") {
+				if (inputFmt.charAt(cursor) === "\"") {
 					cursor += 1;
-					while (cursor < inputResolve.length) {
-						if (inputResolve.charAt(cursor) === "\"") {
+					while (cursor < inputFmt.length) {
+						if (inputFmt.charAt(cursor) === "\"") {
 							cursor += 1;
 							break;
 						}
-						if (inputResolve.charAt(cursor) === "\\") {
+						if (inputFmt.charAt(cursor) === "\\") {
 							cursor += 1;
 						}
-						parameterValue += inputResolve.charAt(cursor);
+						parameterValue += inputFmt.charAt(cursor);
 						cursor += 1;
 					}
 				} else {
-					const cursorDiffParameterValue: number = inputResolve.slice(cursor).search(/[\s;,]/);
+					const cursorDiffParameterValue: number = inputFmt.slice(cursor).search(/[\s;,]/);
 					if (cursorDiffParameterValue === -1) {
-						parameterValue += inputResolve.slice(cursor);
+						parameterValue += inputFmt.slice(cursor);
 						cursor += parameterValue.length;
 					} else {
-						parameterValue += inputResolve.slice(cursor, cursorDiffParameterValue);
+						parameterValue += inputFmt.slice(cursor, cursorDiffParameterValue);
 						cursor += cursorDiffParameterValue;
 					}
 				}
-				parameters[parameterKey] = parametersNeedLowerCase.has(parameterKey) ? parameterValue.toLowerCase() : parameterValue;
-				cursor += cursorWhitespaceSkipper(inputResolve, cursor);
+				parameters[parameterKey] = parametersNeedLowerCase.includes(parameterKey) ? parameterValue.toLowerCase() : parameterValue;
+				cursor += cursorWhitespaceSkipper(inputFmt, cursor);
 				if (
-					cursor === inputResolve.length ||
-					inputResolve.charAt(cursor) === ","
+					cursor === inputFmt.length ||
+					inputFmt.charAt(cursor) === ","
 				) {
 					break;
 				}
-				if (inputResolve.charAt(cursor) === ";") {
+				if (inputFmt.charAt(cursor) === ";") {
 					cursor += 1;
 					continue;
 				}
-				throw new SyntaxError(`Unexpected character \`${inputResolve.charAt(cursor)}\` at position ${cursor}; Expect character \`,\`, character \`;\`, or end of the string!`);
+				throw new SyntaxError(`Unexpected character \`${inputFmt.charAt(cursor)}\` at position ${cursor}; Expect character \`,\`, character \`;\`, or end of the string!`);
 			}
 			this.#entries.push([uri, parameters]);
 		}
@@ -164,12 +163,10 @@ export class HTTPHeaderLink {
 	 * @returns {this}
 	 */
 	add(input: string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response): this {
-		if (input instanceof HTTPHeaderLink) {
-			this.#entries.push(...input.#entries);
-		} else if (input instanceof Response) {
-			this.#parseFromString(input.headers.get("Link") ?? "");
-		} else if (input instanceof Headers) {
+		if (input instanceof Headers) {
 			this.#parseFromString(input.get("Link") ?? "");
+		} else if (input instanceof HTTPHeaderLink) {
+			this.#entries.push(...input.#entries);
 		} else if (Array.isArray(input)) {
 			this.#entries.push(...input.map(([uri, parameters]: HTTPHeaderLinkEntry): HTTPHeaderLinkEntry => {
 				validateURI(uri);
@@ -180,12 +177,14 @@ export class HTTPHeaderLink {
 					) {
 						throw new SyntaxError(`\`${key}\` is not a valid parameter key!`);
 					}
-					if (parametersNeedLowerCase.has(key) && value !== value.toLowerCase()) {
+					if (parametersNeedLowerCase.includes(key) && value !== value.toLowerCase()) {
 						throw new SyntaxError(`\`${value}\` is not a valid parameter value!`);
 					}
 				});
 				return [uri, { ...parameters }];
 			}));
+		} else if (input instanceof Response) {
+			this.#parseFromString(input.headers.get("Link") ?? "");
 		} else {
 			this.#parseFromString(input);
 		}
@@ -196,7 +195,7 @@ export class HTTPHeaderLink {
 	 * @returns {HTTPHeaderLinkEntry[]} Entries.
 	 */
 	entries(): HTTPHeaderLinkEntry[] {
-		return this.#entries;
+		return structuredClone(this.#entries);
 	}
 	/**
 	 * Get entries by parameter.
@@ -211,9 +210,9 @@ export class HTTPHeaderLink {
 		if (key === "rel") {
 			return this.getByRel(value);
 		}
-		return this.#entries.filter((entry: HTTPHeaderLinkEntry): boolean => {
+		return structuredClone(this.#entries.filter((entry: HTTPHeaderLinkEntry): boolean => {
 			return (entry[1][key] === value);
-		});
+		}));
 	}
 	/**
 	 * Get entries by parameter `rel`.
@@ -224,9 +223,9 @@ export class HTTPHeaderLink {
 		if (value !== value.toLowerCase()) {
 			throw new SyntaxError(`\`${value}\` is not a valid parameter \`rel\` value!`);
 		}
-		return this.#entries.filter((entity: HTTPHeaderLinkEntry): boolean => {
+		return structuredClone(this.#entries.filter((entity: HTTPHeaderLinkEntry): boolean => {
 			return (entity[1].rel?.toLowerCase() === value);
-		});
+		}));
 	}
 	/**
 	 * Whether have entries that match parameter.
