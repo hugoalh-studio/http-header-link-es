@@ -11,11 +11,7 @@ export type HTTPHeaderLinkEntry = [
 	parameters: { [key: string]: string; }
 ];
 function validateURI(uri: string): void {
-	if (
-		!isStringSingleLine(uri) ||
-		uri.search("\s") !== -1 ||
-		uri.search("\t") !== -1
-	) {
+	if (!(isStringSingleLine(uri) && uri.search(" ") === -1 && uri.search("\t") === -1)) {
 		throw new SyntaxError(`\`${uri}\` is not a valid URI!`);
 	}
 }
