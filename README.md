@@ -56,8 +56,8 @@ An ES (JavaScript & TypeScript) module to handle the [HTTP header `Link`](https:
 
 - ```ts
   class HTTPHeaderLink {
-    constructor(input?: string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response): this;
-    add(input: string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response): this;
+    constructor(...inputs: (string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response)[]);
+    add(...inputs: (string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response)[]): this;
     entries(): HTTPHeaderLinkEntry[];
     getByParameter(key: string, value: string): HTTPHeaderLinkEntry[];
     getByRel(value: string): HTTPHeaderLinkEntry[];
