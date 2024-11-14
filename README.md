@@ -63,8 +63,8 @@ An ES (JavaScript & TypeScript) module to handle the [HTTP header `Link`](https:
     getByRel(value: string): HTTPHeaderLinkEntry[];
     hasParameter(key: string, value: string): boolean;
     toString(): string;
-    static parse(input: string | Headers | HTTPHeaderLink | Response): HTTPHeaderLink;
-    static stringify(input: HTTPHeaderLinkEntry[]): string;
+    static parse(...inputs: (string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response)[]): HTTPHeaderLink;
+    static stringify(...inputs: (string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response)[]): string;
   }
   ```
 - ```ts

@@ -137,7 +137,7 @@ export class HTTPHeaderLink {
 	#entries: HTTPHeaderLinkEntry[] = [];
 	/**
 	 * Handle the HTTP header `Link` according to the specification RFC 8288.
-	 * @param {...(string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response)} inputs Inputs.
+	 * @param {...(string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response)} inputs Input.
 	 */
 	constructor(...inputs: (string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response)[]) {
 		if (inputs.length > 0) {
@@ -146,7 +146,7 @@ export class HTTPHeaderLink {
 	}
 	/**
 	 * Add entries.
-	 * @param {...(string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response)} inputs Inputs.
+	 * @param {...(string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response)} inputs Input.
 	 * @returns {this}
 	 */
 	add(...inputs: (string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response)[]): this {
@@ -191,7 +191,7 @@ export class HTTPHeaderLink {
 	 * Get entries by parameter.
 	 * @param {string} key Key of the parameter.
 	 * @param {string} value Value of the parameter.
-	 * @returns {HTTPHeaderLinkEntry[]} Entries.
+	 * @returns {HTTPHeaderLinkEntry[]} Entries which match the parameter.
 	 */
 	getByParameter(key: string, value: string): HTTPHeaderLinkEntry[] {
 		if (key !== key.toLowerCase()) {
@@ -207,7 +207,7 @@ export class HTTPHeaderLink {
 	/**
 	 * Get entries by parameter `rel`.
 	 * @param {string} value Value of the parameter `rel`.
-	 * @returns {HTTPHeaderLinkEntry[]} Entries.
+	 * @returns {HTTPHeaderLinkEntry[]} Entries which match the parameter.
 	 */
 	getByRel(value: string): HTTPHeaderLinkEntry[] {
 		if (value !== value.toLowerCase()) {
@@ -221,7 +221,7 @@ export class HTTPHeaderLink {
 	 * Whether have entries that match parameter.
 	 * @param {string} key Key of the parameter.
 	 * @param {string} value Value of the parameter.
-	 * @returns {boolean} Result.
+	 * @returns {boolean} Determine result.
 	 */
 	hasParameter(key: string, value: string): boolean {
 		return (this.getByParameter(key, value).length > 0);
@@ -242,19 +242,19 @@ export class HTTPHeaderLink {
 	}
 	/**
 	 * Parse the HTTP header `Link` according to the specification RFC 8288.
-	 * @param {string | Headers | HTTPHeaderLink | Response} input Input.
+	 * @param {...(string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response)} inputs Input.
 	 * @returns {HTTPHeaderLink}
 	 */
-	static parse(input: string | Headers | HTTPHeaderLink | Response): HTTPHeaderLink {
-		return new this(input);
+	static parse(...inputs: (string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response)[]): HTTPHeaderLink {
+		return new this(...inputs);
 	}
 	/**
 	 * Stringify as the HTTP header `Link` according to the specification RFC 8288.
-	 * @param {HTTPHeaderLinkEntry[]} input Input.
+	 * @param {...(string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response)} inputs Input.
 	 * @returns {string}
 	 */
-	static stringify(input: HTTPHeaderLinkEntry[]): string {
-		return new this(input).toString();
+	static stringify(...inputs: (string | Headers | HTTPHeaderLink | HTTPHeaderLinkEntry[] | Response)[]): string {
+		return new this(...inputs).toString();
 	}
 }
 export default HTTPHeaderLink;
