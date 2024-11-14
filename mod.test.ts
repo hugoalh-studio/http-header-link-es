@@ -32,7 +32,7 @@ Deno.test("String Good 4", { permissions: "none" }, () => {
 	assertEquals(instance.getByRel("preconnect")[2][0], "https://three.example.com");
 });
 Deno.test("String Good 5", { permissions: "none" }, () => {
-	const instance = new HTTPHeaderLink(``);
+	const instance = new HTTPHeaderLink();
 	assertEquals(instance.hasParameter("rel", "preconnect"), false);
 	assertEquals(instance.hasParameter("rel", "connect"), false);
 	assertEquals(instance.hasParameter("rel", "postconnect"), false);
