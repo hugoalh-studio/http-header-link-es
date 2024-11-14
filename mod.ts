@@ -3,6 +3,7 @@ const parametersNeedLowerCase: string[] = [
 	"rel",
 	"type"
 ];
+const regexpLinkWhitespace = /[\n\r\s\t]/;
 /**
  * HTTP header `Link` entry.
  */
@@ -11,7 +12,7 @@ export type HTTPHeaderLinkEntry = [
 	parameters: { [key: string]: string; }
 ];
 function validateURI(uri: string): void {
-	if (!(isStringSingleLine(uri) && uri.search(" ") === -1 && uri.search("\t") === -1)) {
+	if (!(isStringSingleLine(uri) && !regexpLinkWhitespace.test(uri))) {
 		throw new SyntaxError(`\`${uri}\` is not a valid URI!`);
 	}
 }
@@ -19,7 +20,7 @@ function* parseLinkFromString(input: string): Generator<HTTPHeaderLinkEntry> {
 	// Remove Unicode characters of BOM (Byte Order Mark) and no-break space.
 	const inputFmt: string = input.replaceAll("\u00A0", "").replaceAll("\uFEFF", "");
 	for (let cursor: number = 0; cursor < inputFmt.length; cursor += 1) {
-		while (inputFmt.charAt(cursor) === " ") {
+		while (regexpLinkWhitespace.test(inputFmt.charAt(cursor))) {
 			cursor += 1;
 		}
 		if (inputFmt.charAt(cursor) !== "<") {
@@ -38,7 +39,7 @@ function* parseLinkFromString(input: string): Generator<HTTPHeaderLinkEntry> {
 		const uri: HTTPHeaderLinkEntry[0] = decodeURI(uriSlice);
 		const parameters: HTTPHeaderLinkEntry[1] = {};
 		cursor = cursorEndURI + 1;
-		while (inputFmt.charAt(cursor) === " ") {
+		while (regexpLinkWhitespace.test(inputFmt.charAt(cursor))) {
 			cursor += 1;
 		}
 		if (
@@ -53,7 +54,7 @@ function* parseLinkFromString(input: string): Generator<HTTPHeaderLinkEntry> {
 		}
 		cursor += 1;
 		while (cursor < inputFmt.length) {
-			while (inputFmt.charAt(cursor) === " ") {
+			while (regexpLinkWhitespace.test(inputFmt.charAt(cursor))) {
 				cursor += 1;
 			}
 			const parameterKey: string | undefined = inputFmt.slice(cursor).match(/^[\w-]+\*?/)?.[0].toLowerCase();
@@ -61,7 +62,7 @@ function* parseLinkFromString(input: string): Generator<HTTPHeaderLinkEntry> {
 				throw new SyntaxError(`Unexpected character \`${inputFmt.charAt(cursor)}\` at position ${cursor}; Expect a valid parameter key!`);
 			}
 			cursor += parameterKey.length;
-			while (inputFmt.charAt(cursor) === " ") {
+			while (regexpLinkWhitespace.test(inputFmt.charAt(cursor))) {
 				cursor += 1;
 			}
 			if (
@@ -80,7 +81,7 @@ function* parseLinkFromString(input: string): Generator<HTTPHeaderLinkEntry> {
 				throw new SyntaxError(`Unexpected character \`${inputFmt.charAt(cursor)}\` at position ${cursor}; Expect character \`=\`!`);
 			}
 			cursor += 1;
-			while (inputFmt.charAt(cursor) === " ") {
+			while (regexpLinkWhitespace.test(inputFmt.charAt(cursor))) {
 				cursor += 1;
 			}
 			let parameterValue: string = "";
@@ -108,7 +109,7 @@ function* parseLinkFromString(input: string): Generator<HTTPHeaderLinkEntry> {
 				}
 			}
 			parameters[parameterKey] = parametersNeedLowerCase.includes(parameterKey) ? parameterValue.toLowerCase() : parameterValue;
-			while (inputFmt.charAt(cursor) === " ") {
+			while (regexpLinkWhitespace.test(inputFmt.charAt(cursor))) {
 				cursor += 1;
 			}
 			if (
