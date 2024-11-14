@@ -1,7 +1,7 @@
 {
 	"$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
 	"name": "@hugoalh/http-header-link",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"exports": {
 		".": "./mod.ts"
 	},
