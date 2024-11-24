@@ -48,9 +48,9 @@ An ES (JavaScript & TypeScript) module to handle the [HTTP header `Link`](https:
 > - For usage of JSR or NPM resources, it is recommended to import the entire module with the main entrypoint, however it is also able to import part of the module with sub entrypoint if available, please visit the [file `jsr.jsonc`](./jsr.jsonc) property `exports` for available sub entrypoints.
 > - It is recommended to use this module with tag for immutability.
 
-### 🛡️ Require Runtime Permissions
+### 🛡️ Runtime Permissions
 
-*This module does not require any runtime permission.*
+*This module does not request any runtime permission.*
 
 ## 🧩 APIs
 
@@ -75,7 +75,7 @@ An ES (JavaScript & TypeScript) module to handle the [HTTP header `Link`](https:
   ```
 
 > [!NOTE]
-> - For the prettier documentation, can visit via:
+> - For the full or prettier documentation, can visit via:
 >   - [Deno CLI `deno doc`](https://docs.deno.com/runtime/reference/cli/documentation_generator/)
 >   - [JSR](https://jsr.io/@hugoalh/http-header-link)
 
